@@ -352,9 +352,23 @@ if command -v java &>/dev/null; then
     # Detect the latest available Zulu major version from Homebrew
     zulu_latest_cask=$(brew search --cask "zulu@" 2>/dev/null | grep -oE 'zulu@[0-9]+' | sort -t@ -k2 -n | tail -1)
     zulu_install_cmd="${zulu_latest_cask:-zulu}"
-    echo -e "  ${YELLOW}Not installed via Homebrew — update manually or install with: brew install --cask ${zulu_install_cmd}${RESET}"
+    # Check for existing non-Homebrew JDK installations
+    manual_jdks=$(ls -d /Library/Java/JavaVirtualMachines/*.jdk 2>/dev/null || true)
+    if [[ -n "$manual_jdks" ]]; then
+      echo -e "  ${YELLOW}Existing JDK installation(s) found:${RESET}"
+      for jdk_path in $manual_jdks; do
+        echo -e "    $(basename "$jdk_path")"
+      done
+      echo ""
+      echo -e "  ${YELLOW}To switch to Homebrew-managed Zulu, run:${RESET}"
+      echo -e "    sudo rm -rf /Library/Java/JavaVirtualMachines/*.jdk"
+      echo -e "    brew install --cask ${zulu_install_cmd}"
+      add_summary "Java (Zulu)" "$java_current" "" "Not managed" "Remove old JDK, then: brew install --cask ${zulu_install_cmd}"
+    else
+      echo -e "  ${YELLOW}Not installed via Homebrew — install with: brew install --cask ${zulu_install_cmd}${RESET}"
+      add_summary "Java (Zulu)" "$java_current" "" "Not managed" "Run: brew install --cask ${zulu_install_cmd}"
+    fi
     java_status="not managed by Homebrew"
-    add_summary "Java (Zulu)" "$java_current" "" "Not managed" "Run: brew install --cask ${zulu_install_cmd}"
   fi
 fi
 
