@@ -25,39 +25,65 @@ A shell script that checks for and installs updates across all CLI applications 
 curl -sL https://raw.githubusercontent.com/guy2c9/Terminal-check-cli-updates/main/check-cli-updates.sh | bash
 ```
 
-## Run Automatically When Opening Warp or Terminal
+## Run Automatically (Once Per Day)
 
-Add the following line to the end of your `~/.zshrc` file:
+This setup runs the update check once per day, triggered the first time you type `claude` or `cca` in your terminal. Every subsequent use that same day skips straight to the command.
 
-```bash
-curl -sL https://raw.githubusercontent.com/guy2c9/Terminal-check-cli-updates/main/check-cli-updates.sh | bash
-```
+Works with **Warp**, **Terminal.app**, **iTerm2**, or any macOS terminal that uses zsh.
 
-To do this, run:
+### Setup Steps
 
-```bash
-echo 'curl -sL https://raw.githubusercontent.com/guy2c9/Terminal-check-cli-updates/main/check-cli-updates.sh | bash' >> ~/.zshrc
-```
+1. Open **Warp** (or your preferred terminal)
+2. Open a new tab (Cmd + T)
+3. Type the following to open your shell config for editing:
+   ```
+   nano ~/.zshrc
+   ```
+4. Find this line (if it exists):
+   ```
+   alias cca="claude"
+   ```
+5. Replace it with the following block (or add it if the line doesn't exist):
+   ```bash
+   # CLI update check — runs once per day before first claude/cca invocation
+   _cli_update_check() {
+     local last_run_file="$HOME/.cli-update-last-run"
+     local today=$(date +%Y-%m-%d)
+     if [ "$(cat "$last_run_file" 2>/dev/null)" != "$today" ]; then
+       curl -sL https://raw.githubusercontent.com/guy2c9/Terminal-check-cli-updates/main/check-cli-updates.sh | bash
+       echo "$today" > "$last_run_file"
+     fi
+   }
 
-This works with **Warp**, **Terminal.app**, **iTerm2**, or any macOS terminal that uses zsh.
+   claude() {
+     _cli_update_check
+     command claude "$@"
+   }
 
-The script will run once each time a new shell session starts (e.g. opening the app or a new tab).
-
-### Run Once Per Day Only
-
-If you'd prefer the script to only run once per day (not on every new tab), use this instead:
-
-```bash
-echo '[ "$(date +%Y-%m-%d)" != "$(cat ~/.cli-update-last-run 2>/dev/null)" ] && curl -sL https://raw.githubusercontent.com/guy2c9/Terminal-check-cli-updates/main/check-cli-updates.sh | bash && date +%Y-%m-%d > ~/.cli-update-last-run' >> ~/.zshrc
-```
+   alias cca="claude"
+   ```
+6. Save the file: press **Ctrl + O**, then **Enter** to confirm
+7. Exit the editor: press **Ctrl + X**
+8. Open a new tab (Cmd + T) or reload your config:
+   ```
+   source ~/.zshrc
+   ```
+9. Test it — type `claude` or `cca`. The update script should run first, then Claude Code launches. Run it again and it should skip straight to Claude Code.
 
 ### Remove Automatic Updates
 
-To stop the script from running automatically, edit `~/.zshrc` and remove the line you added:
+To stop the script from running automatically:
 
-```bash
-nano ~/.zshrc
-```
+1. Open your shell config:
+   ```
+   nano ~/.zshrc
+   ```
+2. Delete the `_cli_update_check` function, the `claude` function, and the `alias cca="claude"` line
+3. If you still want the `cca` shortcut without the update check, add back:
+   ```
+   alias cca="claude"
+   ```
+4. Save and exit: **Ctrl + O**, **Enter**, **Ctrl + X**
 
 ## Behaviour
 
