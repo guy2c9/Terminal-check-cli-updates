@@ -105,20 +105,12 @@ if command -v pip3 &>/dev/null; then
     echo "$pip_output"
     pip_count=$(( $(echo "$pip_output" | wc -l | tr -d ' ') - 2 ))
     echo ""
-    echo -e "${YELLOW}Upgrading pip packages...${RESET}"
-    pip3 list --outdated --format=json 2>/dev/null | python3 -c "import sys,json; [print(p['name']) for p in json.load(sys.stdin) if p['name'] != 'pip']" 2>/dev/null | while read -r pkg; do
-      pip3 install --upgrade --break-system-packages "$pkg" 2>&1 || true
-    done
-    # pip itself is managed by Homebrew's python formula — upgrade via brew
-    if pip3 list --outdated --format=json 2>/dev/null | python3 -c "import sys,json; exit(0 if any(p['name']=='pip' for p in json.load(sys.stdin)) else 1)" 2>/dev/null; then
-      echo -e "  ${YELLOW}pip is managed by Homebrew — will update with Python formula.${RESET}"
-    fi
-    echo -e "${GREEN}  pip packages upgraded.${RESET}"
+    echo -e "  ${YELLOW}pip packages are managed by Homebrew — upgrade via brew upgrade python.${RESET}"
   else
     echo -e "${GREEN}  All Python packages are up to date.${RESET}"
   fi
   if [[ $pip_count -gt 0 ]]; then
-    add_summary "pip3" "$pip_version" "" "Managed" "Managed by Homebrew Python formula"
+    add_summary "pip3" "$pip_version" "" "Outdated" "${pip_count} package(s) — managed by Homebrew"
   else
     add_summary "pip3" "$pip_version" "" "Up to date" ""
   fi

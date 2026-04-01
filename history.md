@@ -20,37 +20,24 @@
 - Colour-coded output with summary table
 - Auto-run wrapper in `~/.zshrc` that triggers once per day on first `claude`/`cca` invocation
 
+### Session 2 — 2026-04-02 (Review & Fixes)
+
+**Commits made:**
+
+8. `59c93c6` — Fix curl-pipe-to-bash causing script to terminate early
+9. `a30eb74` — Rename repo references from Terminal-check-cli-updates to Autocheck-cli-updates
+
+**What was fixed:**
+
+- Replaced `curl | bash` with download-to-file in `.zshrc` wrapper (fixed summary table not showing)
+- Removed forced `cd` from `claude()` wrapper — now launches in current directory
+- Replaced pip3 auto-upgrade with report-only (removed `--break-system-packages` risk)
+- Fixed README table to match actual SF CLI behaviour
+- Updated all repo URL references to Autocheck-cli-updates
+
 ---
 
 ## Current State of ~/.zshrc Wrapper
-
-```bash
-_cli_update_check() {
-  local last_run_file="$HOME/.cli-update-last-run"
-  local today=$(date +%Y-%m-%d)
-  if [ "$(cat "$last_run_file" 2>/dev/null)" != "$today" ]; then
-    curl -sL https://raw.githubusercontent.com/guy2c9/Autocheck-cli-updates/main/check-cli-updates.sh | bash
-    echo "$today" > "$last_run_file"
-  fi
-}
-
-claude() {
-  _cli_update_check
-  cd "$HOME/Documents/Claude CLI (Warp)" && command claude "$@"
-}
-
-alias cca="claude"
-```
-
----
-
-## Recommendations (Pending Fixes)
-
-### 1. `.zshrc` wrapper pipes curl directly to bash
-
-**Issue:** The current `.zshrc` uses `curl ... | bash` which means the script runs in a subshell. If curl fails silently or GitHub is unreachable, you get no feedback — it just skips the check.
-
-**Fix:** Download to a temp file first, check it's non-empty, then run:
 
 ```bash
 _cli_update_check() {
@@ -66,45 +53,28 @@ _cli_update_check() {
     echo "$today" > "$last_run_file"
   fi
 }
-```
 
-### 2. `claude()` function forces a `cd` on every invocation
-
-**Issue:** The wrapper does `cd "$HOME/Documents/Claude CLI (Warp)"` before running Claude. This means every time you run `claude` or `cca`, your working directory changes — even if you're deliberately in another project folder.
-
-**Fix:** Remove the `cd` so Claude launches in whatever directory you're already in:
-
-```bash
 claude() {
   _cli_update_check
   command claude "$@"
 }
+
+alias cca="claude"
 ```
-
-### 3. The `set -uo pipefail` in the script may cause silent failures
-
-**Issue:** `set -u` (nounset) will error on any unset variable. Combined with various `|| true` guards, some edge cases could fail unexpectedly if a tool produces unexpected output.
-
-**Recommendation:** Keep `set -uo pipefail` but initialise all variables with defaults at the top (this is already mostly done — just verify no edge cases).
-
-### 4. pip3 `--break-system-packages` flag
-
-**Issue:** Line 110 uses `--break-system-packages` which bypasses Python's externally-managed check. This is intentional but risky — a pip upgrade could break Homebrew's Python installation.
-
-**Recommendation:** Consider whether pip packages should be managed at all, or use `pipx` for CLI tools and leave system Python alone.
-
-### 5. README curl command differs from .zshrc
-
-**Issue:** The README shows downloading to a file then running it, but the `.zshrc` wrapper pipes directly to bash. These should be consistent.
-
-**Fix:** Update the `.zshrc` instructions in the README to use the download-then-run approach (see fix #1 above).
 
 ---
 
-## Priority Order
+## Recommendations
 
-1. **Fix #2** (remove forced `cd`) — actively changes your working directory unexpectedly
-2. **Fix #1** (download-then-run) — improves reliability of the auto-check
-3. **Fix #5** (README consistency) — documentation alignment
-4. **Fix #4** (pip strategy) — optional, depends on your pip usage
-5. **Fix #3** (variable defaults) — minor robustness improvement
+### Resolved (Session 2 — 2026-04-02)
+
+1. ~~`.zshrc` wrapper pipes curl directly to bash~~ — **Fixed.** Changed to download-to-file with validation
+2. ~~`claude()` function forces a `cd` on every invocation~~ — **Fixed.** Removed `cd`, launches in current directory
+3. ~~README curl command differs from .zshrc~~ — **Fixed.** Both now use download-to-file approach
+4. ~~pip3 `--break-system-packages` auto-upgrade~~ — **Fixed.** Changed to report-only, no longer auto-upgrades
+5. ~~README SF CLI commands don't match script~~ — **Fixed.** Table now matches actual behaviour
+
+### Remaining
+
+- **`set -uo pipefail`** — `set -u` could abort on unset variables in edge cases. Variables are mostly initialised but worth verifying if new tool sections are added
+- **Legacy JDK removal** uses `sudo rm -rf` which will silently fail without sudo. Acceptable since the fallback message is clear
