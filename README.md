@@ -34,8 +34,8 @@ Works with **Warp**, **Terminal.app**, **iTerm2**, or any macOS terminal that us
 ### Setup Steps
 
 1. Open **Warp** (or your preferred terminal)
-2. Open a new tab (Cmd + T)
-3. Type the following to open your shell config for editing:
+2. If you're running Warp, open a new tab (**Cmd + T**)
+3. Type the following at the bottom of the page to open your shell config for editing:
    ```
    nano ~/.zshrc
    ```
@@ -62,17 +62,14 @@ Works with **Warp**, **Terminal.app**, **iTerm2**, or any macOS terminal that us
 
    alias cca="claude"
    ```
-6. Save the file: press **Ctrl + O**, then **Enter** to confirm
-7. Exit the editor: press **Ctrl + X**
-8. Open a new tab (Cmd + T) or reload your config:
+6. Exit the editor: press **Ctrl + X**, then **Y** to save, then **Enter** to confirm the filename
+7. Open a new tab (**Cmd + T**) or reload your config:
    ```
    source ~/.zshrc
    ```
-9. Test it — type `claude` or `cca`. The update script should run first, then Claude Code launches. Run it again and it should skip straight to Claude Code.
+8. Test it — type `claude` or `cca`. The update script should run first, then Claude Code launches. Run it again and it should skip straight to Claude Code.
 
 ### Remove Automatic Updates
-
-To stop the script from running automatically:
 
 1. Open your shell config:
    ```
@@ -83,7 +80,7 @@ To stop the script from running automatically:
    ```
    alias cca="claude"
    ```
-4. Save and exit: **Ctrl + O**, **Enter**, **Ctrl + X**
+4. Exit and save: **Ctrl + X**, **Y**, **Enter**
 
 ## Behaviour
 
