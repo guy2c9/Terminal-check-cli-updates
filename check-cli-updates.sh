@@ -187,6 +187,15 @@ if command -v sf &>/dev/null; then
     sf_status="up to date"
     add_summary "Salesforce CLI" "$sf_current_ver" "" "Up to date" ""
   fi
+
+  echo ""
+  echo -e "${YELLOW}Updating SF plugins...${RESET}"
+  sf_plugins_output=$(sf plugins update 2>&1 || true)
+  if echo "$sf_plugins_output" | grep -qi "updated\|installing"; then
+    echo -e "${GREEN}  SF plugins updated.${RESET}"
+  else
+    echo -e "${GREEN}  All SF plugins are up to date.${RESET}"
+  fi
 fi
 
 # ── Claude Code CLI ───────────────────────────────

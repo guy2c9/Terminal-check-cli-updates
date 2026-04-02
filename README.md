@@ -10,7 +10,7 @@ A shell script that checks for and installs updates across all CLI applications 
 | **Homebrew Casks** | `brew outdated --cask` | `brew upgrade --cask` |
 | **pip3 Packages** | `pip3 list --outdated` | Reports only — managed by Homebrew |
 | **Python** | Compares brew formula versions | `brew upgrade python@X.XX` |
-| **Salesforce CLI** | `sf version` before/after | `sf update` |
+| **Salesforce CLI** | `sf version` before/after | `sf update` + `sf plugins update` |
 | **Claude Code** | `claude update` | `claude update` |
 | **GitHub CLI** | Compares against latest GitHub release | `brew upgrade gh` |
 | **1Password CLI** | Compares against brew cask info | `brew upgrade --cask 1password-cli` |
