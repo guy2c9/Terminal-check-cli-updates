@@ -40,6 +40,18 @@
 - Added `sf plugins update` to Salesforce CLI section
 - Added reset-and-run command to README for manual testing
 
+### Session 3 — 2026-04-03 (Add Playwright CLI)
+
+**Commits made:**
+
+13. TBD — Add Playwright CLI update check
+
+**What was added:**
+
+- Playwright CLI section: checks current version via `npx playwright --version`, compares against npm registry (`npm view @playwright/test version`), updates via `npm install -g @playwright/test@latest` + `npx playwright install` for browsers
+- README table updated with Playwright row
+- Tool count now 13
+
 ---
 
 ## Current State of ~/.zshrc Wrapper

@@ -29,6 +29,7 @@ warp_status="skipped"
 gcloud_status="skipped"
 java_status="skipped"
 slack_status="skipped"
+playwright_status="skipped"
 
 # Version tracking for summary table
 declare -a summary_names=()
@@ -416,6 +417,30 @@ if command -v gcloud &>/dev/null; then
     echo -e "${GREEN}  Google Cloud CLI is up to date.${RESET}"
     gcloud_status="up to date"
     add_summary "Google Cloud" "$gcloud_current" "" "Up to date" ""
+  fi
+fi
+
+# ── Playwright CLI ───────────────────────────────
+
+if command -v npx &>/dev/null && npx playwright --version &>/dev/null; then
+  header "Playwright CLI"
+  pw_current=$(npx playwright --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)
+  pw_latest=$(npm view @playwright/test version 2>/dev/null || true)
+  if [[ -n "$pw_latest" && -n "$pw_current" && "$pw_current" != "$pw_latest" ]]; then
+    echo -e "  Current: ${YELLOW}${pw_current}${RESET}"
+    echo -e "  Latest:  ${GREEN}${pw_latest}${RESET}"
+    echo ""
+    echo -e "${YELLOW}Updating Playwright...${RESET}"
+    npm install -g @playwright/test@latest 2>&1 || true
+    echo -e "${YELLOW}Updating Playwright browsers...${RESET}"
+    npx playwright install 2>&1 || true
+    playwright_status="updated (${pw_current} → ${pw_latest})"
+    add_summary "Playwright" "$pw_current" "$pw_latest" "Updated" "Via npm global"
+  else
+    echo -e "  Version: ${pw_current}"
+    echo -e "${GREEN}  Playwright is up to date.${RESET}"
+    playwright_status="up to date"
+    add_summary "Playwright" "$pw_current" "" "Up to date" ""
   fi
 fi
 

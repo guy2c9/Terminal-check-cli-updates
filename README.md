@@ -17,6 +17,7 @@ A shell script that checks for and installs updates across all CLI applications 
 | **Warp Terminal** | Compares installed vs latest brew cask | `brew upgrade --cask warp` |
 | **Java (Azul Zulu)** | Compares brew cask installed vs latest | `brew upgrade --cask zulu@XX` |
 | **Slack CLI** | Compares against brew cask info | `brew upgrade --cask slack-cli` |
+| **Playwright CLI** | Compares against npm registry | `npm install -g @playwright/test@latest` + browser update |
 | **Google Cloud CLI** | `gcloud version` before/after | `gcloud components update --quiet` |
 
 ## Run Manually (One-Off)
