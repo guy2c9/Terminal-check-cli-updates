@@ -30,6 +30,8 @@ gcloud_status="skipped"
 java_status="skipped"
 slack_status="skipped"
 playwright_status="skipped"
+codex_status="skipped"
+gemini_status="skipped"
 
 # Version tracking for summary table
 declare -a summary_names=()
@@ -217,6 +219,50 @@ if command -v claude &>/dev/null; then
     echo -e "  Updated:  ${GREEN}${claude_new:-check manually}${RESET}"
     claude_status="updated (${claude_current} → ${claude_new:-?})"
     add_summary "Claude Code" "$claude_current" "${claude_new:-?}" "Updated" ""
+  fi
+fi
+
+# ── Codex CLI (OpenAI) ───────────────────────────
+
+if command -v codex &>/dev/null; then
+  header "Codex CLI (OpenAI)"
+  codex_current=$(codex --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)
+  codex_latest=$(npm view @openai/codex version 2>/dev/null || true)
+  if [[ -n "$codex_latest" && -n "$codex_current" && "$codex_current" != "$codex_latest" ]]; then
+    echo -e "  Current: ${YELLOW}${codex_current}${RESET}"
+    echo -e "  Latest:  ${GREEN}${codex_latest}${RESET}"
+    echo ""
+    echo -e "${YELLOW}Updating Codex CLI...${RESET}"
+    npm install -g @openai/codex@latest 2>&1 || true
+    codex_status="updated (${codex_current} → ${codex_latest})"
+    add_summary "Codex CLI" "$codex_current" "$codex_latest" "Updated" "Via npm global"
+  else
+    echo -e "  Version: ${codex_current}"
+    echo -e "${GREEN}  Codex CLI is up to date.${RESET}"
+    codex_status="up to date"
+    add_summary "Codex CLI" "$codex_current" "" "Up to date" ""
+  fi
+fi
+
+# ── Gemini CLI (Google) ──────────────────────────
+
+if command -v gemini &>/dev/null; then
+  header "Gemini CLI (Google)"
+  gemini_current=$(gemini --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)
+  gemini_latest=$(npm view @google/gemini-cli version 2>/dev/null || true)
+  if [[ -n "$gemini_latest" && -n "$gemini_current" && "$gemini_current" != "$gemini_latest" ]]; then
+    echo -e "  Current: ${YELLOW}${gemini_current}${RESET}"
+    echo -e "  Latest:  ${GREEN}${gemini_latest}${RESET}"
+    echo ""
+    echo -e "${YELLOW}Updating Gemini CLI...${RESET}"
+    npm install -g @google/gemini-cli@latest 2>&1 || true
+    gemini_status="updated (${gemini_current} → ${gemini_latest})"
+    add_summary "Gemini CLI" "$gemini_current" "$gemini_latest" "Updated" "Via npm global"
+  else
+    echo -e "  Version: ${gemini_current}"
+    echo -e "${GREEN}  Gemini CLI is up to date.${RESET}"
+    gemini_status="up to date"
+    add_summary "Gemini CLI" "$gemini_current" "" "Up to date" ""
   fi
 fi
 

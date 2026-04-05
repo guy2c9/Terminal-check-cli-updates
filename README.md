@@ -12,6 +12,8 @@ A shell script that checks for and installs updates across all CLI applications 
 | **Python** | Compares brew formula versions | `brew upgrade python@X.XX` |
 | **Salesforce CLI** | `sf version` before/after | `sf update` + `sf plugins update` |
 | **Claude Code** | `claude update` | `claude update` |
+| **Codex CLI** | Compares against npm registry | `npm install -g @openai/codex@latest` |
+| **Gemini CLI** | Compares against npm registry | `npm install -g @google/gemini-cli@latest` |
 | **GitHub CLI** | Compares against latest GitHub release | `brew upgrade gh` |
 | **1Password CLI** | Compares against brew cask info | `brew upgrade --cask 1password-cli` |
 | **Warp Terminal** | Compares installed vs latest brew cask | `brew upgrade --cask warp` |

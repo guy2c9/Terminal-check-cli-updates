@@ -50,7 +50,19 @@
 
 - Playwright CLI section: checks current version via `npx playwright --version`, compares against npm registry (`npm view @playwright/test version`), updates via `npm install -g @playwright/test@latest` + `npx playwright install` for browsers
 - README table updated with Playwright row
-- Tool count now 13
+
+### Session 4 — 2026-04-05 (Add Codex & Gemini CLIs)
+
+**Commits made:**
+
+14. TBD — Add Codex CLI and Gemini CLI update checks
+
+**What was added:**
+
+- Codex CLI section (OpenAI): checks current version via `codex --version`, compares against npm registry (`npm view @openai/codex version`), updates via `npm install -g @openai/codex@latest`
+- Gemini CLI section (Google): checks current version via `gemini --version`, compares against npm registry (`npm view @google/gemini-cli version`), updates via `npm install -g @google/gemini-cli@latest`
+- README table updated with both new rows
+- Tool count now 15
 
 ---
 
