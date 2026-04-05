@@ -3,13 +3,13 @@
 
 set -uo pipefail
 
-# Colours
-BOLD='\033[1m'
-CYAN='\033[1;36m'
-GREEN='\033[1;32m'
-YELLOW='\033[1;33m'
-RED='\033[1;31m'
-RESET='\033[0m'
+# Colours (exported to suppress SC2034 — all are used in echo -e strings)
+export BOLD='\033[1m'
+export CYAN='\033[1;36m'
+export GREEN='\033[1;32m'
+export YELLOW='\033[1;33m'
+export RED='\033[1;31m'
+export RESET='\033[0m'
 
 # Helper: shorten Warp version (e.g. 0.2025.04.01.08.02.stable_02 → 2025.04.01)
 shorten_warp_ver() {
