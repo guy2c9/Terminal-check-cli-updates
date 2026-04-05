@@ -227,7 +227,7 @@ if command -v python3 &>/dev/null; then
     python_status="up to date"
   fi
 
-  # Remove legacy Python versions that nothing depends on
+  # Report legacy Python versions that nothing depends on (no longer auto-removes)
   py_active=$(python3 --version 2>&1 | awk '{print $2}' | cut -d. -f1,2)
   while IFS= read -r formula; do
     [[ -z "$formula" ]] && continue
@@ -236,9 +236,8 @@ if command -v python3 &>/dev/null; then
       dependents=$(brew uses --installed "$formula" 2>/dev/null || true)
       if [[ -z "$dependents" ]]; then
         echo ""
-        echo -e "  ${YELLOW}Legacy ${formula} found with no dependents — removing...${RESET}"
-        brew uninstall "$formula" 2>&1 || true
-        echo -e "  ${GREEN}${formula} removed.${RESET}"
+        echo -e "  ${YELLOW}Legacy ${formula} found with no dependents.${RESET}"
+        echo -e "  ${YELLOW}To remove, run: brew uninstall ${formula}${RESET}"
       else
         echo -e "  ${formula} is a dependency of: ${dependents} — keeping."
       fi
