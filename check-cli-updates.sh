@@ -198,6 +198,27 @@ if command -v pip3 &>/dev/null; then
   fi
 fi
 
+# ── npm (global packages) ────────────────────────
+
+if command -v npm &>/dev/null; then
+  header "npm (global packages)"
+  npm_version=$(npm --version 2>/dev/null)
+  echo -e "  npm version: ${npm_version}"
+  npm_outdated=$(npm outdated -g --depth=0 2>/dev/null || true)
+  if [[ -n "$npm_outdated" ]]; then
+    echo "$npm_outdated"
+    npm_outdated_count=$(echo "$npm_outdated" | wc -l | tr -d ' ')
+    echo ""
+    echo -e "${YELLOW}Updating global npm packages...${RESET}"
+    npm update -g 2>&1 || true
+    echo -e "${GREEN}  Global npm packages updated.${RESET}"
+    add_summary "npm (global)" "$npm_version" "" "Updated" "${npm_outdated_count} package(s) upgraded"
+  else
+    echo -e "${GREEN}  All global npm packages are up to date.${RESET}"
+    add_summary "npm (global)" "$npm_version" "" "Up to date" ""
+  fi
+fi
+
 # ── Python ────────────────────────────────────────
 
 if command -v python3 &>/dev/null; then

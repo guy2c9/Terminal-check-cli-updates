@@ -9,6 +9,7 @@ A shell script that checks for and installs updates across all CLI applications 
 | **Homebrew Formulae** | `brew outdated --formula` | `brew upgrade --formula` |
 | **Homebrew Casks** | `brew outdated --cask` | `brew upgrade --cask` |
 | **pip3 Packages** | `pip3 list --outdated` | Reports only — managed by Homebrew |
+| **npm (global)** | `npm outdated -g` | `npm update -g` |
 | **Python** | Compares brew formula versions | `brew upgrade python@X.XX` |
 | **Salesforce CLI** | `sf version` before/after | `sf update` + `sf plugins update` |
 | **Claude Code** | `claude update` | `claude update` |
