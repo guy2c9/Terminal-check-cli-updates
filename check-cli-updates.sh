@@ -395,7 +395,7 @@ fi
 
 # ── Java (Azul Zulu) ─────────────────────────────
 
-if command -v java &>/dev/null; then
+if /usr/libexec/java_home &>/dev/null 2>&1; then
   header "Java (Azul Zulu)"
   java_current=$(java -version 2>&1 | head -1 | grep -oE '"[^"]+"' | tr -d '"')
   java_vendor=$(java -version 2>&1 | grep -i "runtime" || true)
@@ -502,7 +502,7 @@ fi
 
 # ── Playwright CLI ───────────────────────────────
 
-if command -v npx &>/dev/null && npx playwright --version &>/dev/null 2>&1; then
+if npm list -g @playwright/test &>/dev/null 2>&1; then
   check_npm_tool "Playwright" "npx playwright" "@playwright/test" "npx playwright install"
 fi
 
